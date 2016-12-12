@@ -1,0 +1,10 @@
+// import base files
+@import "base/variables";
+@import "base/normalize";
+
+// import foundation
+@import "base/foundation-settings";
+@import "foundation";
+@include foundation-everything;
+
+// import components files
