@@ -30,6 +30,11 @@ var reducer = (state = stateDefault, action) => {
           }
         ]
       };
+    case 'REMOVE_HOBBY':
+      return {
+        ...state,
+        hobbies: state.hobbies.filter((hobby) => hobby.id !== action.id)
+      };
     case 'ADD_MOVIE':
       return {
         ...state,
@@ -41,6 +46,11 @@ var reducer = (state = stateDefault, action) => {
             genre: action.genre
           }
         ]
+      };
+    case 'REMOVE_MOVIE':
+      return {
+        ...state,
+        movies: state.movies.filter((movie) => movie.id !== action.id)
       };
     default:
       return state;
@@ -73,6 +83,16 @@ store.dispatch({
 });
 
 store.dispatch({
+  type: 'ADD_HOBBY',
+  hobby: 'Walking'
+});
+
+store.dispatch({
+  type: 'REMOVE_HOBBY',
+  id: 2
+});
+
+store.dispatch({
   type: 'ADD_MOVIE',
   title: 'Hero',
   genre: 'Action'
@@ -87,6 +107,11 @@ store.dispatch({
   type: 'ADD_MOVIE',
   title: 'Villain',
   genre: 'Romance'
+});
+
+store.dispatch({
+  type: 'REMOVE_MOVIE',
+  id: 1
 });
 
 
