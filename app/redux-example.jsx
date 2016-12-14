@@ -2,71 +2,28 @@ var redux = require('redux');
 
 console.log('Starting redux example');
 
-var stateDefault = {
-  name: 'Anonymous',
-  hobbies: [],
-  movies: []
-};
-
-var nextHobbyId = 1;
-var nextMoviesId = 1;
-var oldReducer = (state = stateDefault, action) => {
+// Name reducer and action generator
+// ---------------------------------
+var nameReducer = (state = 'Anonymous', action) => {
   switch(action.type) {
     case 'CHANGE_NAME':
-      return {
-        ...state,
-        name: action.name
-      };
-    case 'ADD_HOBBY':
-      return {
-        ...state,
-        hobbies: [
-          ...state.hobbies,
-          {
-            id: nextHobbyId++,
-            hobby: action.hobby
-          }
-        ]
-      };
-    case 'REMOVE_HOBBY':
-      return {
-        ...state,
-        hobbies: state.hobbies.filter((hobby) => hobby.id !== action.id)
-      };
-    case 'ADD_MOVIE':
-      return {
-        ...state,
-        movies: [
-          ...state.movies,
-          {
-            id: nextMoviesId++,
-            title: action.title,
-            genre: action.genre
-          }
-        ]
-      };
-    case 'REMOVE_MOVIE':
-      return {
-        ...state,
-        movies: state.movies.filter((movie) => movie.id !== action.id)
-      };
+      return action.name;
     default:
       return state;
   }
 };
 
+// Change name action
+var changeName = (name) => {
+  return {
+    type: 'CHANGE_NAME',
+    name
+  };
+};
 
-// nameReducer
-var nameReducer = (state = 'Anonymous', action) => {
-  switch(action.type) {
-    case 'CHANGE_NAME':
-      return action.name
-    default:
-      return state
-  }
-}
-
-// hobbiesReducer
+// Hobbies reducer and action generator
+// ---------------------------------
+var nextHobbyId = 1;
 var hobbiesReducer = (state = [], action) => {
   switch(action.type) {
     case 'ADD_HOBBY':
@@ -84,7 +41,25 @@ var hobbiesReducer = (state = [], action) => {
   }
 };
 
-// moviesReducer
+// Add hobby action
+var addHobby = (hobby) => {
+  return {
+    type: 'ADD_HOBBY',
+    hobby
+  };
+};
+
+// Remove hobby action
+var removeHobby = (id) => {
+  return {
+    type: 'REMOVE_HOBBY',
+    id
+  };
+};
+
+// Movies reducer and action generator
+// ---------------------------------
+var nextMoviesId = 1;
 var moviesReducer = (state = [], action) => {
   switch (action.type) {
     case 'ADD_MOVIE':
@@ -103,7 +78,25 @@ var moviesReducer = (state = [], action) => {
   }
 };
 
+// Add movie action
+var addMovie = (title, genre) => {
+  return {
+    type: 'ADD_MOVIE',
+    title,
+    genre
+  };
+};
+
+// Remove movie action
+var removeMovie = (id) => {
+  return {
+    type: 'REMOVE_MOVIE',
+    id
+  };
+};
+
 // final combined reducer from other reducers
+// ---------------------------------
 var reducer = redux.combineReducers({
   name: nameReducer,
   hobbies: hobbiesReducer,
@@ -114,6 +107,7 @@ var reducer = redux.combineReducers({
 var store = redux.createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
 
 // Subscribe to changes
+// ---------------------------------
 var unsubcribe = store.subscribe(() => {
   var state = store.getState();
 
@@ -126,84 +120,13 @@ var unsubcribe = store.subscribe(() => {
 var currentState = store.getState();
 console.log('currentState', currentState);
 
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Aakash'
-});
-
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'Running'
-});
-
-store.dispatch({
-  type: 'ADD_HOBBY',
-  hobby: 'Walking'
-});
-
-store.dispatch({
-  type: 'REMOVE_HOBBY',
-  id: 2
-});
-
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'Hero',
-  genre: 'Action'
-});
-
-store.dispatch({
-  type: 'CHANGE_NAME',
-  name: 'Ajit'
-});
-
-store.dispatch({
-  type: 'ADD_MOVIE',
-  title: 'Villain',
-  genre: 'Romance'
-});
-
-store.dispatch({
-  type: 'REMOVE_MOVIE',
-  id: 1
-});
-
-
-// ===================================================== //
-// Pure function
-// function add(a, b) {
-//   return a + b;
-// }
-//
-// // Not Pure function
-// var a = 3;
-// function add(b) {
-//   return a + b;
-// }
-//
-// var result;
-// function add(a, b) {
-//   result = a + b;
-//   return result;
-// }
-//
-// function add(a, b) {
-//   return a + b + new Date().getSeconds();
-// }
-//
-//
-//
-// function changeProp(obj) {
-//   return {
-//     ...obj,
-//     name: 'Ajit'
-//   };
-// }
-//
-// var startingValue = {
-//   name: 'Aakash',
-//   age: 22
-// };
-// var res = changeProp(startingValue);
-// console.log(startingValue);
-// console.log(res);
+// Dispatches
+// ---------------------------------
+store.dispatch(changeName('Aakash'));
+store.dispatch(addHobby('Running'));
+store.dispatch(addHobby('Walking'));
+store.dispatch(removeHobby(2));
+store.dispatch(addMovie('Hero', 'Action'));
+store.dispatch(changeName('Ajit'));
+store.dispatch(addMovie('Villain', 'Romance'));
+store.dispatch(removeMovie(1));
