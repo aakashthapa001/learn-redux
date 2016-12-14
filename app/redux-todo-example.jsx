@@ -20,7 +20,15 @@ var reducer = (state = stateDefault, action) => {
   }
 };
 
-var store = redux.createStore(reducer);
+var store = redux.createStore(reducer, window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__());
+
+var unsubcribe = store.subscribe(() => {
+  var state = store.getState();
+
+  console.log('searchText is', state.searchText);
+  document.getElementById('app').innerHTML = state.searchText;
+});
+
 var currentState = store.getState();
 console.log('Current state', currentState);
 
@@ -29,4 +37,12 @@ store.dispatch({
   type: 'CHANGE_SEARCH_TEXT'
 });
 
-console.log('New searchText shoulf be Redux', store.getState());
+store.dispatch({
+  searchText: 'Redux changed',
+  type: 'CHANGE_SEARCH_TEXT'
+});
+
+store.dispatch({
+  searchText: 'Redux changed again',
+  type: 'CHANGE_SEARCH_TEXT'
+});
